@@ -1,21 +1,17 @@
 add_library(l3g4200d STATIC)
 
 target_sources(l3g4200d PRIVATE
-    "l3g4200d.cpp"
+    "l3g4200d.c"
 )
 
 target_include_directories(l3g4200d PUBLIC 
-    "."
-    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_link_libraries(l3g4200d PRIVATE
-    utility
-    stm32cubemx
 )
 
 target_compile_options(l3g4200d PUBLIC
-    -std=c++23
+    -std=c23
     -Wall
     -Wextra
     -Wconversion
@@ -33,5 +29,4 @@ target_compile_options(l3g4200d PUBLIC
     -Wdouble-promotion
     -Wimplicit-fallthrough
     -Wcast-align
-    -fconcepts
 )
