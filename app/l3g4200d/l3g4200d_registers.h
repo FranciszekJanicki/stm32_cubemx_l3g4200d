@@ -121,7 +121,7 @@ typedef struct {
     uint8_t z_h : 1;
     uint8_t z_l : 1;
     uint8_t y_h : 1;
-    uint8_t y_k : 1;
+    uint8_t y_l : 1;
     uint8_t x_h : 1;
     uint8_t x_l : 1;
 } PACKED l3g4200d_int1_src_reg_t;

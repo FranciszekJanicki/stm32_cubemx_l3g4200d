@@ -370,7 +370,7 @@ l3g4200d_err_t l3g4200d_get_ctrl5_reg(l3g4200d_t const* l3g4200d, l3g4200d_ctrl5
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_CTRL5, data, sizeof(data));
 
     reg->boot = (data[0] >> 7U) & 0x01U;
     reg->fifo_en = (data[0] >> 6U) & 0x01U;
@@ -387,7 +387,7 @@ l3g4200d_err_t l3g4200d_set_ctrl5_reg(l3g4200d_t const* l3g4200d, l3g4200d_ctrl5
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_CTRL5, data, sizeof(data));
 
     data[0] &= ~(0x01U << 7U);
     data[0] &= ~(0x01U << 6U);
@@ -401,7 +401,7 @@ l3g4200d_err_t l3g4200d_set_ctrl5_reg(l3g4200d_t const* l3g4200d, l3g4200d_ctrl5
     data[0] |= (reg->int1_sel & 0x03U) << 2U;
     data[0] |= (reg->out_sel & 0x03U) << 0U;
 
-    err |= l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    err |= l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_CTRL5, data, sizeof(data));
 
     return err;
 }
@@ -414,6 +414,8 @@ l3g4200d_err_t l3g4200d_get_out_temp_reg(l3g4200d_t const* l3g4200d, l3g4200d_ou
 
     l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
 
+    reg->temp_7to0 = (int8_t)((data[0] >> 0) & 0xFF);
+
     return err;
 }
 
@@ -423,7 +425,16 @@ l3g4200d_err_t l3g4200d_get_status_reg(l3g4200d_t const* l3g4200d, l3g4200d_stat
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_STATUS, data, sizeof(data));
+
+    reg->zyx_or = (data[0] >> 7U) & 0x01U;
+    reg->z_or = (data[0] >> 6U) & 0x01U;
+    reg->y_or = (data[0] >> 5U) & 0x01U;
+    reg->x_or = (data[0] >> 4U) & 0x01U;
+    reg->zyx_da = (data[0] >> 3U) & 0x01U;
+    reg->z_da = (data[0] >> 2U) & 0x01U;
+    reg->y_da = (data[0] >> 1U) & 0x01U;
+    reg->x_da = (data[0] >> 0U) & 0x01U;
 
     return err;
 }
@@ -434,7 +445,10 @@ l3g4200d_err_t l3g4200d_get_out_x_reg(l3g4200d_t const* l3g4200d, l3g4200d_out_x
 
     uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_OUT_X_L, data, sizeof(data));
+
+    reg->out_x_7to0 = (int8_t)((data[0] >> 0) & 0xFF);
+    reg->out_x_15to8 = (int8_t)((data[1] >> 0) & 0xFF);
 
     return err;
 }
@@ -445,7 +459,10 @@ l3g4200d_err_t l3g4200d_get_out_y_reg(l3g4200d_t const* l3g4200d, l3g4200d_out_y
 
     uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_OUT_Y_L, data, sizeof(data));
+
+    reg->out_y_7to0 = (int8_t)((data[0] >> 0) & 0xFF);
+    reg->out_y_15to8 = (int8_t)((data[1] >> 0) & 0xFF);
 
     return err;
 }
@@ -456,7 +473,10 @@ l3g4200d_err_t l3g4200d_get_out_z_reg(l3g4200d_t const* l3g4200d, l3g4200d_out_z
 
     uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_OUT_Z_L, data, sizeof(data));
+
+    reg->out_z_7to0 = (int8_t)((data[0] >> 0) & 0xFF);
+    reg->out_z_15to8 = (int8_t)((data[1] >> 0) & 0xFF);
 
     return err;
 }
@@ -467,7 +487,14 @@ l3g4200d_err_t l3g4200d_get_out_reg(l3g4200d_t const* l3g4200d, l3g4200d_out_reg
 
     uint8_t data[6] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_OUT_X_L, data, sizeof(data));
+
+    reg->out_x_7to0 = (int8_t)((data[0] >> 0) & 0xFF);
+    reg->out_x_15to8 = (int8_t)((data[1] >> 0) & 0xFF);
+    reg->out_y_7to0 = (int8_t)((data[2] >> 0) & 0xFF);
+    reg->out_y_15to8 = (int8_t)((data[3] >> 0) & 0xFF);
+    reg->out_z_7to0 = (int8_t)((data[4] >> 0) & 0xFF);
+    reg->out_z_15to8 = (int8_t)((data[5] >> 0) & 0xFF);
 
     return err;
 }
@@ -478,7 +505,10 @@ l3g4200d_err_t l3g4200d_get_fifo_ctrl_reg(l3g4200d_t const* l3g4200d, l3g4200d_f
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_FIFO_CTRL, data, sizeof(data));
+
+    reg->fm = (data[0] >> 5U) & 0x07U;
+    reg->wtm = (data[0] >> 0U) & 0x1FU;
 
     return err;
 }
@@ -489,7 +519,10 @@ l3g4200d_err_t l3g4200d_set_fifo_ctrl_reg(l3g4200d_t const* l3g4200d, l3g4200d_f
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    data[0] |= (reg->fm & 0x07U) << 5U;
+    data[0] |= (reg->wtm & 0x1FU) << 0U;
+
+    l3g4200d_err_t err = l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_FIFO_CTRL, data, sizeof(data));
 
     return err;
 }
@@ -500,7 +533,12 @@ l3g4200d_err_t l3g4200d_get_fifo_src_reg(l3g4200d_t const* l3g4200d, l3g4200d_fi
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_FIFO_SRC, data, sizeof(data));
+
+    reg->wtm = (data[0] >> 7U) & 0x01U;
+    reg->ovrn = (data[0] >> 6U) & 0x01U;
+    reg->empty = (data[0] >> 5U) & 0x01U;
+    reg->fss = (data[0] >> 0U) & 0x1FU;
 
     return err;
 }
@@ -511,7 +549,12 @@ l3g4200d_err_t l3g4200d_set_fifo_src_reg(l3g4200d_t const* l3g4200d, l3g4200d_fi
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    data[0] |= (reg->wtm & 0x01U) << 7U;
+    data[0] |= (reg->ovrn & 0x01U) << 6U;
+    data[0] |= (reg->empty & 0x01U) << 5U;
+    data[0] |= (reg->fss & 0x1FU) << 0U;
+
+    l3g4200d_err_t err = l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_FIFO_SRC, data, sizeof(data));
 
     return err;
 }
@@ -522,7 +565,16 @@ l3g4200d_err_t l3g4200d_get_int1_cfg_reg(l3g4200d_t const* l3g4200d, l3g4200d_in
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_CFG, data, sizeof(data));
+
+    reg->and_or = (data[0] >> 7U) & 0x01U;
+    reg->lir = (data[0] >> 6U) & 0x01U;
+    reg->z_hie = (data[0] >> 5U) & 0x01U;
+    reg->z_lie = (data[0] >> 4U) & 0x01U;
+    reg->y_hie = (data[0] >> 3U) & 0x01U;
+    reg->y_lie = (data[0] >> 2U) & 0x01U;
+    reg->x_hie = (data[0] >> 1U) & 0x01U;
+    reg->x_lie = (data[0] >> 0U) & 0x01U;
 
     return err;
 }
@@ -533,7 +585,16 @@ l3g4200d_err_t l3g4200d_set_int1_cfg_reg(l3g4200d_t const* l3g4200d, l3g4200d_in
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    data[0] |= (reg->and_or & 0x01U) << 7U;
+    data[0] |= (reg->lir & 0x01U) << 6U;
+    data[0] |= (reg->z_hie & 0x01U) << 5U;
+    data[0] |= (reg->z_lie & 0x01U) << 4U;
+    data[0] |= (reg->y_hie & 0x01U) << 3U;
+    data[0] |= (reg->y_lie & 0x01U) << 2U;
+    data[0] |= (reg->x_hie & 0x01U) << 1U;
+    data[0] |= (reg->x_lie & 0x01U) << 0U;
+
+    l3g4200d_err_t err = l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_INT1_CFG, data, sizeof(data));
 
     return err;
 }
@@ -544,7 +605,15 @@ l3g4200d_err_t l3g4200d_get_int1_src_reg(l3g4200d_t const* l3g4200d, l3g4200d_in
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_SRC, data, sizeof(data));
+
+    reg->ia = (data[0] >> 6U) & 0x01U;
+    reg->z_h = (data[0] >> 5U) & 0x01U;
+    reg->z_l = (data[0] >> 4U) & 0x01U;
+    reg->y_h = (data[0] >> 3U) & 0x01U;
+    reg->y_l = (data[0] >> 2U) & 0x01U;
+    reg->x_h = (data[0] >> 1U) & 0x01U;
+    reg->x_l = (data[0] >> 0U) & 0x01U;
 
     return err;
 }
@@ -555,7 +624,25 @@ l3g4200d_err_t l3g4200d_set_int1_src_reg(l3g4200d_t const* l3g4200d, l3g4200d_in
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_SRC, data, sizeof(data));
+
+    data[0] &= ~(0x01U << 6U);
+    data[0] &= ~(0x01U << 5U);
+    data[0] &= ~(0x01U << 4U);
+    data[0] &= ~(0x01U << 3U);
+    data[0] &= ~(0x01U << 2U);
+    data[0] &= ~(0x01U << 1U);
+    data[0] &= ~(0x01U << 0U);
+
+    data[0] |= (reg->ia & 0x01U) << 6U;
+    data[0] |= (reg->z_h & 0x01U) << 5U;
+    data[0] |= (reg->z_l & 0x01U) << 4U;
+    data[0] |= (reg->y_h & 0x01U) << 3U;
+    data[0] |= (reg->y_l & 0x01U) << 2U;
+    data[0] |= (reg->x_h & 0x01U) << 1U;
+    data[0] |= (reg->x_l & 0x01U) << 0U;
+
+    err |= l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_INT1_SRC, data, sizeof(data));
 
     return err;
 }
@@ -564,9 +651,12 @@ l3g4200d_err_t l3g4200d_get_int1_ths_x_reg(l3g4200d_t const* l3g4200d, l3g4200d_
 {
     assert(l3g4200d && reg);
 
-    uint8_t data[1] = {};
+    uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_XH, data, sizeof(data));
+
+    reg->ths_x_8to14 = (int8_t)((data[0] >> 0) & 0x7F);
+    reg->ths_x_7to0 = (int8_t)((data[1] >> 0) & 0xFF);
 
     return err;
 }
@@ -575,9 +665,14 @@ l3g4200d_err_t l3g4200d_set_int1_ths_x_reg(l3g4200d_t const* l3g4200d, l3g4200d_
 {
     assert(l3g4200d && reg);
 
-    uint8_t data[1] = {};
+    uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_XH, data, sizeof(data));
+
+    data[0] |= (uint8_t)((reg->ths_x_8to14 & 0x7F) << 0);
+    data[1] |= (uint8_t)((reg->ths_x_7to0 & 0xFF) << 0);
+
+    err |= l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_XH, data, sizeof(data));
 
     return err;
 }
@@ -586,9 +681,12 @@ l3g4200d_err_t l3g4200d_get_int1_ths_y_reg(l3g4200d_t const* l3g4200d, l3g4200d_
 {
     assert(l3g4200d && reg);
 
-    uint8_t data[1] = {};
+    uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_YH, data, sizeof(data));
+
+    reg->ths_y_8to14 = (int8_t)((data[0] >> 0) & 0x7F);
+    reg->ths_y_7to0 = (int8_t)((data[1] >> 0) & 0xFF);
 
     return err;
 }
@@ -597,9 +695,14 @@ l3g4200d_err_t l3g4200d_set_int1_ths_y_reg(l3g4200d_t const* l3g4200d, l3g4200d_
 {
     assert(l3g4200d && reg);
 
-    uint8_t data[1] = {};
+    uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_YH, data, sizeof(data));
+
+    data[0] |= (uint8_t)((reg->ths_y_8to14 & 0x7F) << 0);
+    data[1] |= (uint8_t)((reg->ths_y_7to0 & 0xFF) << 0);
+
+    err |= l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_YH, data, sizeof(data));
 
     return err;
 }
@@ -608,9 +711,12 @@ l3g4200d_err_t l3g4200d_get_int1_ths_z_reg(l3g4200d_t const* l3g4200d, l3g4200d_
 {
     assert(l3g4200d && reg);
 
-    uint8_t data[1] = {};
+    uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_ZH, data, sizeof(data));
+
+    reg->ths_z_8to14 = (int8_t)((data[0] >> 0) & 0x7F);
+    reg->ths_z_7to0 = (int8_t)((data[1] >> 0) & 0xFF);
 
     return err;
 }
@@ -619,9 +725,14 @@ l3g4200d_err_t l3g4200d_set_int1_ths_z_reg(l3g4200d_t const* l3g4200d, l3g4200d_
 {
     assert(l3g4200d && reg);
 
-    uint8_t data[1] = {};
+    uint8_t data[2] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_ZH, data, sizeof(data));
+
+    data[0] |= (uint8_t)((reg->ths_z_8to14 & 0x7F) << 0);
+    data[1] |= (uint8_t)((reg->ths_z_7to0 & 0xFF) << 0);
+
+    err |= l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_INT1_THS_ZH, data, sizeof(data));
 
     return err;
 }
@@ -632,7 +743,10 @@ l3g4200d_err_t l3g4200d_get_int1_duration_reg(l3g4200d_t const* l3g4200d, l3g420
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    l3g4200d_err_t err = l3g4200d_bus_read(l3g4200d, L3G4200D_REG_ADDR_INT1_DURATION, data, sizeof(data));
+
+    reg->wait = (data[0] >> 7U) & 0x01U;
+    reg->d = (data[0] >> 0U) & 0x7FU;
 
     return err;
 }
@@ -643,7 +757,10 @@ l3g4200d_err_t l3g4200d_set_int1_duration_reg(l3g4200d_t const* l3g4200d, l3g420
 
     uint8_t data[1] = {};
 
-    l3g4200d_err_t err = l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_WHO_AM_I, data, sizeof(data));
+    data[0] |= (reg->wait & 0x01U) << 7U;
+    data[0] |= (reg->d & 0x7FU) << 0U;
+
+    l3g4200d_err_t err = l3g4200d_bus_write(l3g4200d, L3G4200D_REG_ADDR_INT1_DURATION, data, sizeof(data));
 
     return err;
 }
