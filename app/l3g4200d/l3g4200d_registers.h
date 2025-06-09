@@ -19,7 +19,6 @@ typedef struct {
 } PACKED l3g4200d_ctrl1_reg_t;
 
 typedef struct {
-    uint8_t : 2;
     uint8_t hpm : 2;
     uint8_t hpcf : 4;
 } PACKED l3g4200d_ctrl2_reg_t;
@@ -39,7 +38,6 @@ typedef struct {
     uint8_t bdu : 1;
     uint8_t ble : 1;
     uint8_t fs : 2;
-    uint8_t : 1;
     uint8_t st : 2;
     uint8_t sim : 1;
 } PACKED l3g4200d_ctrl4_reg_t;
@@ -47,14 +45,13 @@ typedef struct {
 typedef struct {
     uint8_t boot : 1;
     uint8_t fifo_en : 1;
-    uint8_t : 1;
     uint8_t hp_en : 1;
     uint8_t int1_sel : 2;
     uint8_t out_sel : 2;
 } PACKED l3g4200d_ctrl5_reg_t;
 
 typedef struct {
-    int8_t temp_7to0 : 8;
+    int8_t temp : 8;
 } PACKED l3g4200d_out_temp_reg_t;
 
 typedef struct {
@@ -69,27 +66,21 @@ typedef struct {
 } PACKED l3g4200d_status_reg_t;
 
 typedef struct {
-    int8_t out_x_7to0 : 8;
-    int8_t out_x_15to8 : 8;
+    int16_t out_x : 16;
 } PACKED l3g4200d_out_x_reg_t;
 
 typedef struct {
-    int8_t out_y_7to0 : 8;
-    int8_t out_y_15to8 : 8;
+    int16_t out_y : 16;
 } PACKED l3g4200d_out_y_reg_t;
 
 typedef struct {
-    int8_t out_z_7to0 : 8;
-    int8_t out_z_15to8 : 8;
+    int16_t out_z : 16;
 } PACKED l3g4200d_out_z_reg_t;
 
 typedef struct {
-    int8_t out_x_7to0 : 8;
-    int8_t out_x_15to8 : 8;
-    int8_t out_y_7to0 : 8;
-    int8_t out_y_15to8 : 8;
-    int8_t out_z_7to0 : 8;
-    int8_t out_z_15to8 : 8;
+    int16_t out_x : 16;
+    int16_t out_y : 16;
+    int16_t out_z : 16;
 } PACKED l3g4200d_out_reg_t;
 
 typedef struct {
@@ -116,7 +107,6 @@ typedef struct {
 } PACKED l3g4200d_int1_cfg_reg_t;
 
 typedef struct {
-    uint8_t : 1;
     uint8_t ia : 1;
     uint8_t z_h : 1;
     uint8_t z_l : 1;
@@ -127,21 +117,15 @@ typedef struct {
 } PACKED l3g4200d_int1_src_reg_t;
 
 typedef struct {
-    uint8_t : 1;
-    int8_t ths_x_8to14 : 7;
-    int8_t ths_x_7to0 : 8;
+    int16_t ths_x : 15;
 } PACKED l3g4200d_int1_ths_x_reg_t;
 
 typedef struct {
-    uint8_t : 1;
-    int8_t ths_y_8to14 : 7;
-    int8_t ths_y_7to0 : 8;
+    int16_t ths_y : 15;
 } PACKED l3g4200d_int1_ths_y_reg_t;
 
 typedef struct {
-    uint8_t : 1;
-    int8_t ths_z_8to14 : 7;
-    int8_t ths_z_7to0 : 8;
+    int16_t ths_z : 15;
 } PACKED l3g4200d_int1_ths_z_reg_t;
 
 typedef struct {
